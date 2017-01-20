@@ -375,6 +375,9 @@ request.el, so if at all possible, it should be avoided."
                      (format "/rest/api/2/issue/%s" (first params))
                      :type "PUT"
                      :data (json-encode `((fields . ,(second params))))))
+      ('getBoards (jiralib--rest-call-it
+		   (format "/rest/agile/1.0/board?type=%s" (first params))
+		   :type "GET"))
       ('getActiveSprints (jiralib--rest-call-it
 			 (format "/rest/agile/1.0/board/%s/sprint?state=active" (first params))
 			 :type "GET")))))
@@ -944,6 +947,9 @@ Return no more than MAX-NUM-RESULTS."
   "Remove carriage returns from STRING."
   (when string (replace-regexp-in-string "\r" "" string)))
 
+(defun jiralib-get-boards (&optional board-type)
+  "Return agile boards accessible by currentuser() of type BOARD-TYPE."
+  (jiralib-call "getBoards" nil board-type))
 (defun jiralib-get-active-sprint (board-id)
   "Return active sprints for board BOARD-ID."
   (jiralib-call "getActiveSprints" nil board-id))
