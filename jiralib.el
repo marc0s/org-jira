@@ -374,7 +374,10 @@ request.el, so if at all possible, it should be avoided."
       ('updateIssue (jiralib--rest-call-it
                      (format "/rest/api/2/issue/%s" (first params))
                      :type "PUT"
-                     :data (json-encode `((fields . ,(second params)))))))))
+                     :data (json-encode `((fields . ,(second params))))))
+      ('getActiveSprints (jiralib--rest-call-it
+			 (format "/rest/agile/1.0/board/%s/sprint?state=active" (first params))
+			 :type "GET")))))
 
 (defun jiralib--soap-call-it (&rest args)
   "Deprecated SOAP call endpoint.  Will be removed soon.
@@ -940,6 +943,10 @@ Return no more than MAX-NUM-RESULTS."
 (defun jiralib-strip-cr (string)
   "Remove carriage returns from STRING."
   (when string (replace-regexp-in-string "\r" "" string)))
+
+(defun jiralib-get-active-sprint (board-id)
+  "Return active sprints for board BOARD-ID."
+  (jiralib-call "getActiveSprints" nil board-id))
 
 (provide 'jiralib)
 ;;; jiralib.el ends here
